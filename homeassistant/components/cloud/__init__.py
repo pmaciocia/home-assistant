@@ -82,6 +82,11 @@ class Cloud:
             self.iot_endpoint = info['iot_endpoint']
 
     @property
+    def is_connected(self):
+        """Return if we are connected."""
+        return self.client is not None
+
+    @property
     def certificate_pem_path(self):
         """Get path to certificate pem."""
         return self.path('{}_iot_certificate.pem'.format(self.mode))

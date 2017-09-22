@@ -81,7 +81,7 @@ class CloudLoginView(HomeAssistantView):
                                           data['password'])
             yield from hass.async_add_job(cloud.connect)
 
-        return self.json(_auth_data(cloud))
+        return self.json(_account_data(cloud))
 
 
 class CloudLogoutView(HomeAssistantView):
@@ -115,11 +115,10 @@ class CloudAccountView(HomeAssistantView):
         hass = request.app['hass']
         cloud = hass.data[DOMAIN]
 
-        # TODO fixxxx
-        if cloud.email is None:
+        if not cloud.is_connected:
             return self.json_message('Not logged in', 400)
 
-        return self.json(_auth_data(cloud))
+        return self.json(_account_data(cloud))
 
 
 class CloudRegisterView(HomeAssistantView):
@@ -221,7 +220,7 @@ class CloudConfirmForgotPasswordView(HomeAssistantView):
         return self.json_message('ok')
 
 
-def _auth_data(cloud):
+def _account_data(cloud):
     """Generate the auth data JSON response."""
     return {
         'email': cloud.email

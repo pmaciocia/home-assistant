@@ -9,7 +9,7 @@ from homeassistant.components import switch, light
 from homeassistant.util.decorator import register_decorator_factory
 
 HANDLERS = {}
-_handler = register_decorator_factory(HANDLERS)
+_handler = register_decorator_factory(HANDLERS)  # pylint: disable=invalid-name
 _LOGGER = logging.getLogger(__name__)
 
 ATTR_HEADER = 'header'

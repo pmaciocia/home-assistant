@@ -6,11 +6,11 @@ import os
 
 import voluptuous as vol
 
+from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 from . import http_api, iot
 from .const import (
     CONFIG_DIR, DOMAIN, SERVERS, PUBLISH_TOPIC_FORMAT, SUBSCRIBE_TOPIC_FORMAT,
     IOT_KEEP_ALIVE)
-from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 
 
 REQUIREMENTS = ['warrant==0.2.0', 'AWSIoTPythonSDK==1.2.0']
@@ -185,7 +185,8 @@ def _client_factory(cloud):
     client.configureCredentials(root_ca, cloud.secret_key_path,
                                 cloud.certificate_pem_path)
 
-    # client.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
+    # Infinite offline Publish queueing
+    # client.configureOfflinePublishQueueing(-1)
     # client.configureDrainingFrequency(2)  # Draining: 2 Hz
     # client.configureConnectDisconnectTimeout(10)  # 10 sec
     # client.configureMQTTOperationTimeout(5)  # 5 sec

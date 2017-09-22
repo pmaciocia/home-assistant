@@ -9,7 +9,7 @@ import async_timeout
 from homeassistant.components.http import (
     HomeAssistantView, RequestDataValidator)
 
-from . import auth_api, iot
+from . import auth_api
 from .const import DOMAIN, REQUEST_TIMEOUT
 
 _LOGGER = logging.getLogger(__name__)

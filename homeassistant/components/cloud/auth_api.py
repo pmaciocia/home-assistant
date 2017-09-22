@@ -5,8 +5,6 @@ from urllib.parse import urljoin
 
 import requests
 
-from .const import SERVERS
-
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -143,7 +141,6 @@ def _retrieve_iot_certificate(cloud, id_token):
 
 def _make_api_call(cloud, id_token, path, method='POST'):
     """Make a request to our API server."""
-
     headers = {"Authorization": id_token}
     uri = urljoin(cloud.api_base, path)
     response = requests.request(method, uri, headers=headers)

@@ -1,3 +1,4 @@
+"""Module to handle messages from Home Assistant cloud."""
 import asyncio
 import json
 import logging
@@ -7,7 +8,7 @@ from homeassistant.components.alexa import smart_home
 from .const import ALEXA_PUBLISH_TOPIC
 
 HANDLERS = {}
-_handler = register_decorator_factory(HANDLERS)
+_handler = register_decorator_factory(HANDLERS)  # pylint: disable=invalid-name
 _LOGGER = logging.getLogger(__name__)
 
 

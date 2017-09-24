@@ -6,10 +6,9 @@ from uuid import uuid4
 from homeassistant.const import (
     ATTR_SUPPORTED_FEATURES, ATTR_ENTITY_ID, SERVICE_TURN_ON, SERVICE_TURN_OFF)
 from homeassistant.components import switch, light
-from homeassistant.util.decorator import register_decorator_factory
+from homeassistant.util.decorator import Registry
 
-HANDLERS = {}
-_handler = register_decorator_factory(HANDLERS)  # pylint: disable=invalid-name
+HANDLERS = Registry()
 _LOGGER = logging.getLogger(__name__)
 
 ATTR_HEADER = 'header'
@@ -70,7 +69,7 @@ def api_error(request, exc='DriverInternalError'):
     return api_message(exc, request[ATTR_HEADER][ATTR_NAMESPACE])
 
 
-@_handler('DiscoverAppliancesRequest')
+@HANDLERS.register('DiscoverAppliancesRequest')
 @asyncio.coroutine
 def async_api_discovery(hass, request):
     """Create a API formatted discovery response.
@@ -136,7 +135,7 @@ def extract_entity(funct):
     return async_api_entity_wrapper
 
 
-@_handler('TurnOnRequest')
+@HANDLERS.register('TurnOnRequest')
 @extract_entity
 @asyncio.coroutine
 def async_api_turn_on(hass, request, entity):
@@ -148,7 +147,7 @@ def async_api_turn_on(hass, request, entity):
     return api_message('TurnOnConfirmation', 'Alexa.ConnectedHome.Control')
 
 
-@_handler('TurnOffRequest')
+@HANDLERS.register('TurnOffRequest')
 @extract_entity
 @asyncio.coroutine
 def async_api_turn_off(hass, request, entity):
@@ -160,7 +159,7 @@ def async_api_turn_off(hass, request, entity):
     return api_message('TurnOffConfirmation', 'Alexa.ConnectedHome.Control')
 
 
-@_handler('SetPercentageRequest')
+@HANDLERS.register('SetPercentageRequest')
 @extract_entity
 @asyncio.coroutine
 def async_api_set_percentage(hass, request, entity):

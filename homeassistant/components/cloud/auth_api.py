@@ -1,4 +1,5 @@
 """Package to offer tools to authenticate with the cloud."""
+import hashlib
 import json
 import logging
 from urllib.parse import urljoin
@@ -60,13 +61,18 @@ def _map_aws_exception(err):
     return ex(err.response['Error']['Message'])
 
 
+def _generate_username(email):
+    """Generate a username from an email address."""
+    return hashlib.sha512(email.encode('utf-8')).hexdigest()
+
+
 def register(cloud, email, password):
     """Register a new account."""
     from botocore.exceptions import ClientError
 
-    cognito = _cognito(cloud, username=email)
+    cognito = _cognito(cloud)
     try:
-        cognito.register(email, password)
+        cognito.register(_generate_username(email), password, email=email)
     except ClientError as err:
         raise _map_aws_exception(err)
 
@@ -75,9 +81,9 @@ def confirm_register(cloud, confirmation_code, email):
     """Confirm confirmation code after registration."""
     from botocore.exceptions import ClientError
 
-    cognito = _cognito(cloud, username=email)
+    cognito = _cognito(cloud)
     try:
-        cognito.confirm_sign_up(confirmation_code, email)
+        cognito.confirm_sign_up(confirmation_code, _generate_username(email))
     except ClientError as err:
         raise _map_aws_exception(err)
 
@@ -86,7 +92,7 @@ def forgot_password(cloud, email):
     """Initiate forgotten password flow."""
     from botocore.exceptions import ClientError
 
-    cognito = _cognito(cloud, username=email)
+    cognito = _cognito(cloud, username=_generate_username(email))
     try:
         cognito.initiate_forgot_password()
     except ClientError as err:
@@ -97,7 +103,7 @@ def confirm_forgot_password(cloud, confirmation_code, email, new_password):
     """Confirm forgotten password code and change password."""
     from botocore.exceptions import ClientError
 
-    cognito = _cognito(cloud, username=email)
+    cognito = _cognito(cloud, username=_generate_username(email))
     try:
         cognito.confirm_forgot_password(confirmation_code, new_password)
     except ClientError as err:

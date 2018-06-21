@@ -79,8 +79,9 @@ class HueBridge:
                              host)
             return False
 
-        hass.async_create_task(hass.config_entries.async_forward_entry_setup(
-            self.config_entry, 'light'))
+        for platform in ['light', 'sensor']:
+            hass.async_create_task(hass.config_entries.async_forward_entry_setup(
+                self.config_entry, platform))
 
         hass.services.async_register(
             DOMAIN, SERVICE_HUE_SCENE, self.hue_activate_scene,
